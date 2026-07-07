@@ -1,7 +1,7 @@
 /* ============================================================
    VARDHAMAN HOSPITAL — Design System
    Women's & Children's Hospital · Valsad, Gujarat
-   Brand: Indigo & Red (from logo) · "Empowering Women's Health & Wellness"
+   Brand: Indigo & Red (from logo)
    ============================================================ */
 
 :root {
@@ -44,6 +44,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+body.sd-preloader-active { overflow: hidden; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--ff-head);
@@ -58,6 +59,35 @@ a { color: var(--c-primary); text-decoration: none; transition: color .25s, back
 img { max-width: 100%; display: block; }
 p { margin: 0 0 1rem; }
 ul { margin: 0; }
+
+/* ---------- Preloader ---------- */
+.sd-preloader {
+  position: fixed; inset: 0; z-index: 3000;
+  display: grid; place-items: center;
+  background: #fff;
+  opacity: 1; visibility: visible;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+.sd-preloader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.sd-preloader__card {
+  width: 124px; height: 124px;
+  position: relative; display: grid; place-items: center;
+}
+.sd-preloader__logo {
+  width: 72px; height: 72px; object-fit: contain;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 12px 36px rgba(61,47,143,.12);
+}
+.sd-preloader__ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 3px solid var(--c-accent-soft2);
+  border-top-color: var(--c-primary);
+  animation: sd-spin .75s linear infinite;
+}
+@keyframes sd-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .sd-preloader__ring { animation: none; border-top-color: var(--c-accent-soft2); }
+}
 
 .sd-container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
 .sd-section { padding: 92px 0; position: relative; }
@@ -144,8 +174,8 @@ ul { margin: 0; }
 /* mobile drawer — wrapped in a fixed, viewport-sized clip layer so the
    off-canvas panel never extends the page width (prevents horizontal scroll) */
 .sd-offcanvas { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 1100; }
-.sd-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(360px, 86vw); background: #fff; z-index: 2; transform: translateX(100%); transition: transform .35s ease; box-shadow: -20px 0 60px rgba(43,32,105,.2); display: flex; flex-direction: column; padding: 22px; overflow-y: auto; pointer-events: auto; }
-.sd-drawer.is-open { transform: translateX(0); }
+.sd-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(360px, 86vw); background: #fff; z-index: 2; transform: translateX(100%); visibility: hidden; transition: transform .35s ease, visibility .35s ease; box-shadow: -20px 0 60px rgba(43,32,105,.2); display: flex; flex-direction: column; padding: 22px; overflow-y: auto; pointer-events: auto; }
+.sd-drawer.is-open { transform: translateX(0); visibility: visible; }
 .sd-drawer__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
 .sd-drawer__close { width: 42px; height: 42px; border: none; background: var(--c-bg-soft); border-radius: 10px; font-size: 18px; color: var(--c-ink); cursor: pointer; }
 .sd-drawer nav { display: flex; flex-direction: column; }
@@ -310,6 +340,16 @@ ul { margin: 0; }
 /* doctor profile (about page) */
 .sd-profile { display: grid; grid-template-columns: .85fr 1.15fr; gap: 46px; align-items: start; }
 .sd-profile__media img { width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
+.sd-profile--consultant { margin-top: 42px; }
+.sd-profile--consultant:first-of-type { margin-top: 0; }
+.sd-head-center + .sd-profile--consultant { margin-top: 0; }
+.sd-profile-card { background: linear-gradient(135deg,var(--c-accent-soft),#fff); border: 1px solid var(--c-line); border-radius: var(--radius-lg); padding: 30px 24px; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 18px; }
+.sd-profile__media .sd-profile-card__photo { width: 190px; height: 190px; border-radius: 50%; object-fit: cover; object-position: top center; margin: 0 auto 16px; display: block; border: 2px dashed var(--c-accent); padding: 7px; background: #fff; box-shadow: none; }
+.sd-profile-card__photo--mistry { object-position: center 18%; }
+.sd-profile-card__photo--piyush { object-position: center top; }
+.sd-profile-card h3 { margin-bottom: 4px; }
+.sd-profile-card__role { color: var(--c-primary); font-weight: 600; font-family: var(--ff-head); font-size: 14px; }
+.sd-profile-card p { font-size: 13px; margin: 6px 0 0; color: var(--c-body); }
 .sd-profile__media .card, .sd-profile__card-wide { margin-top: 18px; background: var(--c-primary); color: #fff; border-radius: var(--radius); padding: 22px; }
 .sd-profile__media .card h4, .sd-profile__card-wide h4 { color: #fff; font-size: 16px; }
 .sd-profile__media .card ul, .sd-profile__card-wide ul { list-style: none; padding: 0; margin: 10px 0 0; font-size: 14px; }
@@ -333,6 +373,17 @@ ul { margin: 0; }
 .sd-gallery__item:hover::after { opacity: 1; }
 .sd-gallery__cap { position: absolute; left: 14px; bottom: 12px; z-index: 2; color: #fff; font-family: var(--ff-head); font-weight: 600; font-size: 14px; text-shadow: 0 2px 8px rgba(0,0,0,.5); opacity: 0; transform: translateY(8px); transition: .35s; }
 .sd-gallery__item:hover .sd-gallery__cap { opacity: 1; transform: translateY(0); }
+.sd-lightbox { position: fixed; inset: 0; z-index: 2200; display: none; align-items: center; justify-content: center; padding: 22px; background: rgba(12, 9, 31, .9); }
+.sd-lightbox.is-open { display: flex; }
+.sd-lightbox__img { max-width: min(100%, 1120px); max-height: 86vh; object-fit: contain; border-radius: 8px; box-shadow: 0 24px 70px rgba(0,0,0,.45); }
+.sd-lightbox__close, .sd-lightbox__nav { position: absolute; border: 0; color: #fff; background: rgba(255,255,255,.13); display: grid; place-items: center; cursor: pointer; transition: background .2s, transform .2s; }
+.sd-lightbox__close:hover, .sd-lightbox__nav:hover { background: rgba(255,255,255,.24); transform: translateY(-1px); }
+.sd-lightbox__close { top: 18px; right: 18px; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; }
+.sd-lightbox__nav { top: 50%; width: 48px; height: 48px; border-radius: 50%; transform: translateY(-50%); font-size: 18px; }
+.sd-lightbox__nav:hover { transform: translateY(-50%) scale(1.03); }
+.sd-lightbox__nav--prev { left: 18px; }
+.sd-lightbox__nav--next { right: 18px; }
+.sd-lightbox__caption { position: absolute; left: 24px; right: 24px; bottom: 18px; color: #fff; text-align: center; font-family: var(--ff-head); font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
 
 /* ============================================================
    ACCREDITATION
@@ -344,6 +395,7 @@ ul { margin: 0; }
 .sd-accred__card h3 { font-size: 18px; margin-bottom: 8px; }
 .sd-accred__card p { font-size: 14px; margin: 0; }
 .sd-accred__year { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; letter-spacing: .05em; color: var(--c-primary); background: var(--c-accent-soft); padding: 4px 12px; border-radius: 20px; }
+.sd-infra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 30px; }
 .sd-certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 38px; }
 .sd-cert { display: block; background: #fff; border: 1px solid var(--c-line); border-radius: 14px; padding: 12px; box-shadow: var(--shadow-sm); transition: transform .3s, box-shadow .3s; }
 .sd-cert:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--c-accent-soft2); }
@@ -522,24 +574,6 @@ ul { margin: 0; }
 .sd-top.is-show { opacity: 1; visibility: visible; }
 .sd-top:hover { background: var(--c-primary-dark); }
 
-/* ---------- preloader ---------- */
-.sd-preload { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: radial-gradient(circle at 50% 38%, #ffffff 0%, #f0edfa 70%, #e4dff4 100%); transition: opacity .55s ease, visibility .55s ease; }
-.sd-preload.is-done { opacity: 0; visibility: hidden; }
-.sd-preload__inner { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: sdfadein .6s ease; }
-@keyframes sdfadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.sd-preload__badge { position: relative; width: 128px; height: 128px; display: grid; place-items: center; }
-.sd-preload__spin { position: absolute; inset: 0; width: 100%; height: 100%; animation: sdrot 1.3s linear infinite; transform-origin: 50% 50%; }
-.sd-preload__spin .arc { animation: sddash 1.7s ease-in-out infinite; }
-@keyframes sdrot { to { transform: rotate(360deg); } }
-@keyframes sddash { 0% { stroke-dasharray: 18 260; } 50% { stroke-dasharray: 150 160; } 100% { stroke-dasharray: 18 260; } }
-.sd-preload__logo { width: 70px; height: 70px; object-fit: contain; animation: sdbeat 1.6s ease-in-out infinite; }
-@keyframes sdbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
-.sd-preload__name { font-family: var(--ff-head); font-weight: 800; letter-spacing: .14em; color: var(--c-primary-dark); font-size: 18px; text-align: center; line-height: 1.3; }
-.sd-preload__name span { display: block; font-size: 11px; font-weight: 600; letter-spacing: .2em; color: var(--c-accent); margin-top: 4px; }
-.sd-preload__ecg { width: 210px; height: 34px; }
-.sd-preload__ecg path { stroke-dasharray: 340; stroke-dashoffset: 340; animation: sddraw 1.9s ease-in-out infinite; }
-@keyframes sddraw { 0% { stroke-dashoffset: 340; } 55% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -340; } }
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -567,6 +601,7 @@ ul { margin: 0; }
   body { font-size: 15px; }
   .sd-section { padding: 52px 0; }
   .sd-grid-3, .sd-grid-2, .sd-grid-4, .sd-why__grid, .sd-accred, .sd-gallery, .sd-form .row2, .sd-info-grid { grid-template-columns: 1fr; }
+  .sd-footer__grid, .sd-infra-grid { grid-template-columns: 1fr; }
   .sd-contact__cta { padding: 22px; }
   .sd-mapcard__foot { flex-direction: column; align-items: stretch; }
   .sd-mapcard__foot .sd-btn { justify-content: center; }
@@ -579,4 +614,13 @@ ul { margin: 0; }
   .sd-about__media .accent-img { right: 0; }
   .sd-wa__label { display: none; }
   .sd-wa { padding: 14px; }
+  .sd-lightbox { padding: 14px; }
+  .sd-lightbox__nav { top: auto; bottom: 68px; width: 42px; height: 42px; }
+  .sd-lightbox__nav--prev { left: calc(50% - 52px); }
+  .sd-lightbox__nav--next { right: calc(50% - 52px); }
+  .sd-lightbox__caption { bottom: 22px; font-size: 14px; }
+}
+@media (max-width: 480px) {
+  .sd-grid-5 { grid-template-columns: 1fr; }
+  .sd-docc { max-width: 300px; margin: 0 auto; }
 }
